@@ -83,10 +83,14 @@ def sample_inference():
     o3d.visualization.draw_geometries([cloud_gt])
 
 def vis_s2r_depth():
-    rgb = np.array(Image.open('/opt/data/private/graspnet_dataset/scenes/scene_0000/realsense/rgb/0010.png'), dtype = np.float32)
-    s2r_depth = np.array(Image.open('/opt/data/private/graspnet_dataset/synthetic/scene_0000/realsense/s2r_depth_ddpm/0010.png'), dtype = np.float32)
+    data_root = "/opt/data/private/graspnet_dataset"
+    scene_name = "scene_0000"
+    camera = "realsense"
+    image_name = "0010.png"
+    rgb = np.array(Image.open(os.path.join(data_root, "scenes", scene_name, camera, "rgb", image_name)), dtype = np.float32)
+    s2r_depth = np.array(Image.open(os.path.join(data_root, "domain_translated", "transcg", scene_name, camera, "depth", image_name)), dtype = np.float32)
     s2r_depth = s2r_depth / 1000
-    cam_intrinsics = np.load('/opt/data/private/graspnet_dataset/scenes/scene_0021/realsense/camK.npy')
+    cam_intrinsics = np.load(os.path.join(data_root, "scenes", scene_name, camera, "camK.npy"))
     cloud = draw_point_cloud(rgb, s2r_depth, cam_intrinsics, scale = 1.0)
     o3d.visualization.draw_geometries([cloud])
 

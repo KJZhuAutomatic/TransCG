@@ -73,18 +73,12 @@ class ConfigBuilder(object):
         A model, which is usually a torch.nn.Module object.
         """
         from models.DFNet import DFNet
-        from models.DFNet_DDPM import DFNet_DDPM
-        from models.DFNet_DDPM_v2 import DFNet_DDPM_v2
         if model_params is None:
             model_params = self.model_params
         type = model_params.get('type', 'DFNet')
         params = model_params.get('params', {})
         if type == 'DFNet':
             model = DFNet(**params)
-        elif type == "DFNet_DDPM":
-            model = DFNet_DDPM(**params)
-        elif type == "DFNet_DDPM_v2":
-            model = DFNet_DDPM_v2(**params)
         else:
             raise NotImplementedError('Invalid model type.')
         return model
@@ -205,7 +199,6 @@ class ConfigBuilder(object):
         from datasets.omniverse_object import OmniverseObject
         from datasets.transparent_object import TransparentObject
         from datasets.graspnet_synthetic import GraspNetSyn
-        from datasets.graspnet_synthetic_ddpm import GraspNetSynDDPM
         if dataset_params is None:
             dataset_params = self.dataset_params
         dataset_params = dataset_params.get(split, {'type': 'transcg'})
@@ -223,8 +216,6 @@ class ConfigBuilder(object):
                 dataset = TransparentObject(split = split, **dataset_params)
             elif dataset_type == 'graspnet_synthetic':
                 dataset = GraspNetSyn(split = split, **dataset_params)
-            elif dataset_type == 'graspnet_synthetic_ddpm':
-                dataset = GraspNetSynDDPM(split = split, **dataset_params)
             else:
                 raise NotImplementedError('Invalid dataset type: {}.'.format(dataset_type))
             logger.info('Load {} dataset as {}ing set with {} samples.'.format(dataset_type, split, len(dataset)))
