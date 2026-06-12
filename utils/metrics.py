@@ -239,7 +239,8 @@ class Metrics(object):
         The threshold metric.
         """
         delta = kwargs.get('delta', 1.25)
-        thres = torch.maximum(pred / (gt + self.epsilon), gt / pred)
+        # thres = torch.maximum(pred / (gt + self.epsilon), gt / pred)
+        thres = torch.where(pred / (gt + self.epsilon) > gt / pred, pred / (gt + self.epsilon), gt / pred)
         res = ((thres < delta) & zero_mask).float().sum(dim = [1, 2]) / torch.sum(zero_mask.float(), dim = [1, 2])
         return safe_mean_without_inf(res, 1.0).item() * 100
     
@@ -267,7 +268,8 @@ class Metrics(object):
         """
         delta = kwargs.get('delta', 1.25)
         mask = gt_mask & zero_mask
-        thres = torch.maximum(pred / (gt + self.epsilon), gt / pred)
+        # thres = torch.maximum(pred / (gt + self.epsilon), gt / pred)
+        thres = torch.where(pred / (gt + self.epsilon) > gt / pred, pred / (gt + self.epsilon), gt / pred)
         res = ((thres < delta) & mask).float().sum(dim = [1, 2]) / torch.sum(mask.float(), dim = [1, 2])
         return safe_mean_without_inf(res, 1.0).item() * 100
 

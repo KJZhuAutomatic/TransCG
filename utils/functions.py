@@ -109,10 +109,10 @@ def get_xyz(depth, fx, fy, cx, cy, original_size = (1280, 720)):
     indices = torch.FloatTensor(np.array([indices] * bs)).to(depth.device)
     x_scale = w / original_size[0]
     y_scale = h / original_size[1]
-    fx *= x_scale
-    fy *= y_scale
-    cx *= x_scale
-    cy *= y_scale
+    fx = fx * x_scale
+    fy = fy * y_scale
+    cx = cx * x_scale
+    cy = cy * y_scale
     z = depth
     x = (indices[:, 1, :, :] - einops.repeat(cx, 'bs -> bs h w', h = h, w = w)) * z / einops.repeat(fx, 'bs -> bs h w', h = h, w = w)
     y = (indices[:, 0, :, :] - einops.repeat(cy, 'bs -> bs h w', h = h, w = w)) * z / einops.repeat(fy, 'bs -> bs h w', h = h, w = w)

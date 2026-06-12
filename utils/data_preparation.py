@@ -289,6 +289,9 @@ def process_data(
     data_dict for training and testing.
     """
 
+    original_h, original_w = depth.shape
+    camera_intrinsics = camera_intrinsics.copy()
+
     depth_original = process_depth(depth.copy(), camera_type = camera_type, depth_min = depth_min, depth_max = depth_max, depth_norm = depth_norm)
     depth_gt_original = process_depth(depth_gt.copy(), camera_type = camera_type,  depth_min = depth_min, depth_max = depth_max, depth_norm = depth_norm)
     depth_gt_mask_original = depth_gt_mask.copy()
@@ -318,12 +321,14 @@ def process_data(
             depth = np.flip(depth, axis = 0)
             depth_gt = np.flip(depth_gt, axis = 0)
             depth_gt_mask = np.flip(depth_gt_mask, axis = 0)
+            camera_intrinsics[1, 2] = original_h - 1 - camera_intrinsics[1, 2]
         if np.random.rand(1) > 0.5:
             has_aug = True
             rgb = np.flip(rgb, axis = 1)
             depth = np.flip(depth, axis = 1)
             depth_gt = np.flip(depth_gt, axis = 1)
             depth_gt_mask = np.flip(depth_gt_mask, axis = 1)
+            camera_intrinsics[0, 2] = original_w - 1 - camera_intrinsics[0, 2]
         if has_aug:
             rgb = rgb.copy()
             depth = depth.copy()
@@ -392,6 +397,6 @@ def process_data(
         data_dict['depth_gt_mask_original'] = torch.BoolTensor(depth_gt_mask_original)
         data_dict['zero_mask_original'] = torch.BoolTensor(zero_mask_original)
 
-    data_dict['depth_gt_sn'] = get_surface_normal_from_depth(data_dict['depth_gt'].unsqueeze(0), data_dict['fx'].unsqueeze(0), data_dict['fy'].unsqueeze(0), data_dict['cx'].unsqueeze(0), data_dict['cy'].unsqueeze(0)).squeeze(0)
+    data_dict['depth_gt_sn'] = get_surface_normal_from_depth(data_dict['depth_gt'].unsqueeze(0), data_dict['fx'].unsqueeze(0), data_dict['fy'].unsqueeze(0), data_dict['cx'].unsqueeze(0), data_dict['cy'].unsqueeze(0), original_size = (original_w, original_h)).squeeze(0)
 
     return data_dict

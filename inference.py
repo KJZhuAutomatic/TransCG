@@ -50,7 +50,9 @@ class Inferencer(object):
         
         self.cuda_id = self.builder.get_inference_cuda_id()
         self.device = torch.device('cuda:{}'.format(self.cuda_id) if torch.cuda.is_available() else 'cpu')
+        # self.device = torch.device('cpu')
         self.model.to(self.device)
+        self.model.eval()
 
         if self.with_info:
             self.logger.info('Checking checkpoints ...')

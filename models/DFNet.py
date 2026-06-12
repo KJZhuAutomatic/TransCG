@@ -166,7 +166,8 @@ class DFNet(nn.Module):
         # 720 x 1280 (rgb, depth) -> 360 x 640 (h)
         n, h, w = depth.shape
         depth = depth.view(n, 1, h, w)
-        h = self.first(torch.cat((rgb, depth), dim = 1))
+        # h = self.first(torch.cat((rgb, depth), dim = 1))
+        h = self.first(depth)
 
         # dense1: 360 x 640 (h, depth1) -> 180 x 320 (h, depth2)
         depth1 = F.interpolate(depth, scale_factor = 0.5, mode = "nearest")

@@ -2,11 +2,40 @@
 .history/
 .DS_Store
 */.DS_Store
+.vscode/
 stats/
 data/
 data
 vis/
 vis.py
+core
+core.*
+
+# Project generated artifacts
+checkpoints/
+checkpoint/
+runs/
+logs/
+outputs/
+output/
+results/
+result/
+predictions/
+wandb/
+mlruns/
+tensorboard/
+events.out.tfevents.*
+
+# Model weights / serialized experiment data
+*.ckpt
+*.pth
+*.pt
+*.onnx
+*.tar
+*.pkl
+*.pickle
+*.npy
+*.npz
 
 
 # Byte-compiled / optimized / DLL files
